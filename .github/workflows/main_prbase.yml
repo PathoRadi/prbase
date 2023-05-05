@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'prbase'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_401E8F4CCCF64056AC316B7D28ABBEF1 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_65D3D97304BE43A780E8CBD140C4A867 }}
           package: .

@@ -22,9 +22,9 @@ async function sendMail(email, username, id) {
       auth: {
         type: 'OAuth2',
         user: process.env.USER_EMAIL,
-        clientId: CLIENT_ID,
-        clientSecret: CLEINT_SECRET,
-        refreshToken: REFRESH_TOKEN,
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLEINT_SECRET,
+        refreshToken: process.env.REFRESH_TOKEN,
         accessToken: accessToken,
       },
     });

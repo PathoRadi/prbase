@@ -53,16 +53,16 @@ async function sendToAdmin(username, id) {
         auth: {
           type: 'OAuth2',
           user: process.env.USER_EMAIL,
-          clientId: CLIENT_ID,
-          clientSecret: CLEINT_SECRET,
-          refreshToken: REFRESH_TOKEN,
+          clientId: process.env.CLIENT_ID,
+          clientSecret: process.env.CLEINT_SECRET,
+          refreshToken:process.env.REFRESH_TOKEN,
           accessToken: accessToken,
         },
       });
   
       const mailOptions = {
         from: `PathoRadi <${props.env.USER_EMAIL}>`,
-        to: 'chaohsiung.hsu@howard.edu; tsangwei.tu@howard.edu; hsiuchuan.shih@howard.edu',
+        to: 'chaohsiung.hsu@howard.edu;tsangwei.tu@howard.edu;hsiuchuan.shih@howard.edu',
         subject: `New Upload Info from ${username}`,
         text: `New Upload Info from ${username}, download here: ${process.env.PATHORADI_URL}/${id}`,
         html: `<div>New Upload Info from ${username}.</div><div> Download here: <a href='${pathoradiURL}/${id}'>${pathoradiURL}/${id}</a></div>`,

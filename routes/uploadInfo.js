@@ -1,10 +1,15 @@
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 
+//const API_UL = process.env.LOCAL_URL;
+const API_UL = process.env.PATHORADI_URL;
+
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLEINT_SECRET = process.env.CLEINT_SECRET;
-const REDIRECT_URI = process.env.REDIRECT_URI;
 const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
+const REDIRECT_URI = process.env.REDIRECT_URI;
+
+const USER_EMAIL = process.env.USER_EMAIL;
 
 const oAuth2Client = new google.auth.OAuth2(
   CLIENT_ID,
@@ -21,10 +26,10 @@ async function sendMail(email, username, id) {
       service: 'gmail',
       auth: {
         type: 'OAuth2',
-        user: process.env.USER_EMAIL,
-        clientId: process.env.CLIENT_ID,
-        clientSecret: process.env.CLEINT_SECRET,
-        refreshToken: process.env.REFRESH_TOKEN,
+        user: USER_EMAIL,
+        clientId: CLIENT_ID,
+        clientSecret: CLEINT_SECRET,
+        refreshToken: REFRESH_TOKEN,
         accessToken: accessToken,
       },
     });
@@ -47,26 +52,27 @@ async function sendMail(email, username, id) {
 async function sendToAdmin(username, id) {
     try {
       const accessToken = await oAuth2Client.getAccessToken();
-  
+
       const transport = nodemailer.createTransport({
         service: 'gmail',
         auth: {
           type: 'OAuth2',
-          user: process.env.USER_EMAIL,
-          clientId: process.env.CLIENT_ID,
-          clientSecret: process.env.CLEINT_SECRET,
-          refreshToken:process.env.REFRESH_TOKEN,
+          user: USER_EMAIL,
+          clientId: CLIENT_ID,
+          clientSecret: CLEINT_SECRET,
+          refreshToken: REFRESH_TOKEN,
           accessToken: accessToken,
         },
       });
   
       const mailOptions = {
-        from: `PathoRadi <${props.env.USER_EMAIL}>`,
-        to: 'chaohsiung.hsu@howard.edu;tsangwei.tu@howard.edu;hsiuchuan.shih@howard.edu',
+        from: `PathoRadi <janice.hc.shih@gmail.com>`,
+        to: 'hsiuchuan.shih@howard.edu',
         subject: `New Upload Info from ${username}`,
-        text: `New Upload Info from ${username}, download here: ${process.env.PATHORADI_URL}/${id}`,
-        html: `<div>New Upload Info from ${username}.</div><div> Download here: <a href='${pathoradiURL}/${id}'>${pathoradiURL}/${id}</a></div>`,
+        //text: `New Upload Info from ${username}, download here: http://localhost:3000/uploadInfo/${id}`,
+        html: `<div>New Upload Info from ${username}.</div><br/><div> Download Link:  <a href='${API_UL}/${id}'> here </a></div><br/><div>From PathoRadi team </div>`,
       };
+      
   
       const result = await transport.sendMail(mailOptions);
       return result;
@@ -83,11 +89,11 @@ const mysql = require("mysql");
 
 const fs = require("fs");
 var config = {
-  host: "prbase.mysql.database.azure.com",
-  user: "prbase",
-  password: "2Axijoll@",
-  database: "prbase",
-  port: 3306,
+  host: process.env.MySQL_HOST,
+  user: process.env.MySQL_USER,
+  password: process.env.MySQL_PASSWORD,
+  database: process.env.MySQL_DB,
+  port: process.env.MySQL_PORT,
   ssl: { ca: fs.readFileSync("DigiCertGlobalRootCA.crt.pem") },
 };
 
@@ -116,11 +122,11 @@ router.post("/create", (req, res) => {
       if (err) throw err;
       else {
         sendMail(email, username, results.insertId)
-        .then((result) => console.log('Email sent...', result))
+        .then((result) => console.log('sendMail sent...', result))
         .catch((error) => console.log(error.message));
 
         sendToAdmin(username, results.insertId)
-        .then((result) => console.log('Email sent...', result))
+        .then((result) => console.log('sendToAdmin sent...', result))
         .catch((error) => console.log(error.message));
         
         res.end(JSON.stringify(results))

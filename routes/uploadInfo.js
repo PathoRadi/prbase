@@ -139,7 +139,7 @@ router.get("/:id", (req, res) => {
     const id = req.params.id;
 
     db.query(
-        " SELECT * FROM  image_info WHERE userid=?",[id],
+        " SELECT * FROM  image_info WHERE imageid=?",[id],
         (err, results, fields) => {
             if (err) throw err;
             else res.end(JSON.stringify(results));

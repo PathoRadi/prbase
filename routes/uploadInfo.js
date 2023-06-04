@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 
-//const API_UL = process.env.LOCAL_URL;
+// const API_UL = process.env.LOCAL_URL;
 const API_UL = process.env.PATHORADI_URL;
 
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -109,15 +109,14 @@ router.get('/', function(req, res, next) {
 router.post("/create", (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
-  const project = req.body.project;
   const thickness = req.body.thickness;
   const pixel = req.body.pixel;
   const sample = req.body.sample;
-  const rawImages = req.body.rawImages;
+  const images = req.body.images;
 
   db.query(
-    "INSERT INTO upload_info (username, email, project, thickness, pixel, sample, rawImages) VALUES (?, ?, ?, ?, ?, ?, ?);",
-    [username, email, project, thickness, pixel, sample, rawImages],
+    "INSERT INTO image_info (username, email, thickness, pixel, images) VALUES (?, ?, ?, ?, ?);",
+    [username, email, thickness, pixel, images],
     (err, results, fields) => {
       if (err) throw err;
       else {
@@ -140,7 +139,7 @@ router.get("/:id", (req, res) => {
     const id = req.params.id;
 
     db.query(
-        " SELECT * FROM  upload_info WHERE userid=?",[id],
+        " SELECT * FROM  image_info WHERE userid=?",[id],
         (err, results, fields) => {
             if (err) throw err;
             else res.end(JSON.stringify(results));

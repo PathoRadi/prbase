@@ -37,7 +37,7 @@ async function sendMail(email, username, token) {
     const mailOptions = {
       from: 'MorStain <pathoradi.howard@gmail.com>',
       to: email,
-      subject: 'Email from MorStain Team',
+      subject: 'Thank you for Creating MorStain Account',
       text: `Hello ${username}, Please reset your password clicking on here.`,
       html: `<div>Hello ${username}</div><div> Please reset your password clicking on <a href="https://imaging.howard.edu/morstainai/user/reset?email=${email}&token=${token}">here</a>.</div>`,
     };

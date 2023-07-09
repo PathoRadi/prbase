@@ -1,5 +1,5 @@
-const nodemailer = require('nodemailer');
-const { google } = require('googleapis');
+const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
 
 // const API_UL = process.env.LOCAL_URL;
 const API_UL = process.env.PATHORADI_URL;
@@ -18,7 +18,7 @@ const oAuth2Client = new google.auth.OAuth2(
 );
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
 const mysql = require("mysql");
@@ -35,25 +35,80 @@ var config = {
 
 const db = new mysql.createConnection(config);
 
-/* GET uploadInfo listing. */
-router.get('/', function(req, res, next) {
+
+async function sendMail(email) {
+  try {
+    const accessToken = await oAuth2Client.getAccessToken();
+
+    const transport = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        type: 'OAuth2',
+        user: USER_EMAIL,
+        clientId: CLIENT_ID,
+        clientSecret: CLEINT_SECRET,
+        refreshToken: REFRESH_TOKEN,
+        accessToken: accessToken,
+      },
+    });
+
+    const mailOptions = {
+      from: 'MorStain <pathoradi.howard@gmail.com>',
+      to: email,
+      subject: 'Rest Your MorStain Password successfully!',
+      // text: `Hello ${username}, Please reset your password clicking on here.`,
+      html: `Rest Your MorStain Password successfully! Please sin up your account <a href="https://imaging.howard.edu/morstainai/user">here</a>.</div>`,
+    };
+
+    const result = await transport.sendMail(mailOptions);
+    return result;
+  } catch (error) {
+    return error;
+  }
+}
+
+router.get("/", function (req, res, next) {
   const email = req.query.email;
   const token = req.query.token;
-    
+
   db.query(
-    `SELECT * FROM user_info WHERE email='${email} ' and token='${token}'`,
+    `SELECT * FROM user_info WHERE email='${email}' and token='${token}'`,
     (err, results, fields) => {
       if (err) throw err;
       else {
-        if(results.length === 1)
-            res.end(JSON.stringify({allow: true}))
-        else
-            res.end(JSON.stringify({allow: false}))
+        if (results.length === 1) res.end(JSON.stringify({ allow: true }));
+        else res.end(JSON.stringify({ allow: false }));
       }
     }
   );
 
-});
+  router.post("/update", (req, res) => {
+    // const username = req.body.username;
+    const email = req.body.email;
+    const token = req.body.token;
+    const password = req.body.password;
 
+    //UPDATE user_info SET password = '${password}' WHERE email='${email}' and token='${token}'
+
+    console.dir(
+      `UPDATE user_info SET password='${password}' WHERE email='${email}' and token='${token}'`
+    );
+
+    db.query(
+      `UPDATE user_info SET password='${password}' WHERE email='${email}' and token='${token}'`,
+      (err, results, fields) => {
+        if (err) throw err;
+        else {
+          console.dir(results);
+          res.end(JSON.stringify({ result: true }));
+        }
+      }
+    );
+
+    sendMail(email)
+        .then((result) => console.log('sendMail sent...', result))
+        .catch((error) => console.log(error.message));
+  });
+});
 
 module.exports = router;

@@ -35,9 +35,9 @@ async function sendMail(email, username, id) {
     });
 
     const mailOptions = {
-      from: 'PathoRadi <janice.hc.shih@gmail.com>',
+      from: 'MorStain <pathoradi.howard@gmail.com>',
       to: email,
-      subject: 'Email from PathoRadi Team',
+      subject: 'Email from MorStain Team',
       text: `Hello ${username} Your proccess id is pathoradi_${id}.`,
       html: `<div>Hello ${username}</div><div> Your proccess id is pathoradi_${id}.</div>`,
     };
@@ -66,11 +66,11 @@ async function sendToAdmin(username, id) {
       });
   
       const mailOptions = {
-        from: `PathoRadi <janice.hc.shih@gmail.com>`,
+        from: `MorSTain <pathoradi.howard@gmail.com>`,
         to: 'hsiuchuan.shih@howard.edu',
         subject: `New Upload Info from ${username}`,
         //text: `New Upload Info from ${username}, download here: http://localhost:3000/uploadInfo/${id}`,
-        html: `<div>New Upload Info from ${username}.</div><br/><div> Download Link:  <a href='${API_UL}/${id}'> here </a></div><br/><div>From PathoRadi team </div>`,
+        html: `<div>New Upload Info from ${username}.</div><br/><div> Download Link:  <a href='${API_UL}/${id}'> here </a></div><br/><div>From MorSTain team </div>`,
       };
       
   

@@ -10,6 +10,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var userInfoRouter = require('./routes/userInfo');
 var uploadInfoRouter = require('./routes/uploadInfo');
+var resetPasswordRouter = require('./routes/resetPassword');
 
 var app = express();
 const cors=require("cors");
@@ -32,5 +33,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/uploadInfo', uploadInfoRouter);
 app.use('/userInfo', userInfoRouter);
+
+app.use('/resetPassword', resetPasswordRouter);
 
 module.exports = app;

@@ -80,8 +80,8 @@ router.post("/create", (req, res) => {
   const organization = req.body.organization;
   const email = req.body.email;
   const password = req.body.password;
-  const token = Buffer.from(plainCredential).toString('base64');
-  const timestamp = Date.now();
+  const token = "123456";
+  const timestamp = null;
 
   db.query(
     "INSERT INTO user_info (firstname, lastname, organization, email, password, token, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?);",

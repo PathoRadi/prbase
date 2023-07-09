@@ -39,7 +39,7 @@ async function sendMail(email, username, token) {
       to: email,
       subject: 'Email from MorStain Team',
       text: `Hello ${username}, Please reset your password clicking on here.`,
-      html: `<div>Hello ${username}</div><div> Please reset your password clicking on <a href="https://imaging.howard.edu/morstainai/user/reset?email=${email}&toekn=${token}">here</a>.</div>`,
+      html: `<div>Hello ${username}</div><div> Please reset your password clicking on <a href="https://imaging.howard.edu/morstainai/user/reset?email=${email}&token=${token}">here</a>.</div>`,
     };
 
     const result = await transport.sendMail(mailOptions);

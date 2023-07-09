@@ -18,7 +18,7 @@ const oAuth2Client = new google.auth.OAuth2(
 );
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-async function sendMail(email, username, id) {
+async function sendMail(email, username, token) {
   try {
     const accessToken = await oAuth2Client.getAccessToken();
 
@@ -35,11 +35,11 @@ async function sendMail(email, username, id) {
     });
 
     const mailOptions = {
-      from: 'PathoRadi <janice.hc.shih@gmail.com>',
+      from: 'MorStain <janice.hc.shih@gmail.com>',
       to: email,
-      subject: 'Email from PathoRadi Team',
-      text: `Hello ${username} Your proccess id is pathoradi_${id}.`,
-      html: `<div>Hello ${username}</div><div> Your proccess id is pathoradi_${id}.</div>`,
+      subject: 'Email from MorStain Team',
+      text: `Hello ${username}, Please reset your password clicking on here.`,
+      html: `<div>Hello ${username}</div><div> Please reset your password clicking on <a href="https://imaging.howard.edu/morstainai/user/reset?email=${email}&toekn=${token}">here</a>.</div>`,
     };
 
     const result = await transport.sendMail(mailOptions);
@@ -93,7 +93,7 @@ router.post("/create", (req, res) => {
   const lastname = req.body.lastname;
   const organization = req.body.organization;
   const email = req.body.email;
-  const password = req.body.password;
+  const password = null;
   // create random toke
   const token = generateRandomString(30);
   // timestamp
@@ -105,9 +105,9 @@ router.post("/create", (req, res) => {
     (err, results, fields) => {
       if (err) throw err;
       else {
-        // sendMail(email, username, results.insertId)
-        // .then((result) => console.log('sendMail sent...', result))
-        // .catch((error) => console.log(error.message));
+        sendMail(email, `${firstname} ${lastname}`, token)
+        .then((result) => console.log('sendMail sent...', result))
+        .catch((error) => console.log(error.message));
         
         res.end(JSON.stringify(results))
       }

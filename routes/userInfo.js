@@ -49,6 +49,20 @@ async function sendMail(email, username, id) {
   }
 }
 
+// Create a function for reusable perpose
+const generateRandomString = (myLength) => {
+  const chars =
+    "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890";
+  const randomArray = Array.from(
+    { length: myLength },
+    (v, k) => chars[Math.floor(Math.random() * chars.length)]
+  );
+
+  const randomString = randomArray.join("");
+  return randomString;
+};
+
+
 var express = require('express');
 var router = express.Router();
 
@@ -80,8 +94,10 @@ router.post("/create", (req, res) => {
   const organization = req.body.organization;
   const email = req.body.email;
   const password = req.body.password;
-  const token = "123456";
-  const timestamp = null;
+  // create random toke
+  const token = generateRandomString(30);
+  // timestamp
+  const timestamp = new Date();
 
   db.query(
     "INSERT INTO user_info (firstname, lastname, organization, email, password, token, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?);",

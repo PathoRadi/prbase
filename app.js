@@ -11,6 +11,7 @@ var usersRouter = require('./routes/users');
 var userInfoRouter = require('./routes/userInfo');
 var uploadInfoRouter = require('./routes/uploadInfo');
 var resetPasswordRouter = require('./routes/resetPassword');
+var singinRouter = require('./routes/singin');
 
 var app = express();
 const cors=require("cors");
@@ -31,9 +32,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
 app.use('/uploadInfo', uploadInfoRouter);
 app.use('/userInfo', userInfoRouter);
 
+app.use('/singin', singinRouter);
 app.use('/resetPassword', resetPasswordRouter);
 
 module.exports = app;

@@ -35,15 +35,14 @@ var config = {
 
 const db = new mysql.createConnection(config);
 
-
 async function sendMail(email) {
   try {
     const accessToken = await oAuth2Client.getAccessToken();
 
     const transport = nodemailer.createTransport({
-      service: 'gmail',
+      service: "gmail",
       auth: {
-        type: 'OAuth2',
+        type: "OAuth2",
         user: USER_EMAIL,
         clientId: CLIENT_ID,
         clientSecret: CLEINT_SECRET,
@@ -53,11 +52,11 @@ async function sendMail(email) {
     });
 
     const mailOptions = {
-      from: 'MorStain <pathoradi.howard@gmail.com>',
+      from: "MorStain <pathoradi.howard@gmail.com>",
       to: email,
-      subject: 'Rest Your MorStain Password successfully!',
+      subject: "Rest Your MorStain Password successfully!",
       // text: `Hello ${username}, Please reset your password clicking on here.`,
-      html: `Rest Your MorStain Password successfully! Please sin up your account <a href="https://imaging.howard.edu/morstainai/user">here</a>.</div>`,
+      html: `Rest Your MorStain Password successfully! Please sin in your account <a href="https://imaging.howard.edu/morstainai/user">here</a>.</div>`,
     };
 
     const result = await transport.sendMail(mailOptions);
@@ -81,34 +80,34 @@ router.get("/", function (req, res, next) {
       }
     }
   );
+});
 
-  router.post("/update", (req, res) => {
-    // const username = req.body.username;
-    const email = req.body.email;
-    const token = req.body.token;
-    const password = req.body.password;
+router.post("/update", (req, res) => {
+  // const username = req.body.username;
+  const email = req.body.email;
+  const token = req.body.token;
+  const password = req.body.password;
 
-    //UPDATE user_info SET password = '${password}' WHERE email='${email}' and token='${token}'
+  //UPDATE user_info SET password = '${password}' WHERE email='${email}' and token='${token}'
 
-    console.dir(
-      `UPDATE user_info SET password='${password}' WHERE email='${email}' and token='${token}'`
-    );
+  console.dir(
+    `UPDATE user_info SET password='${password}' WHERE email='${email}' and token='${token}'`
+  );
 
-    db.query(
-      `UPDATE user_info SET password='${password}' WHERE email='${email}' and token='${token}'`,
-      (err, results, fields) => {
-        if (err) throw err;
-        else {
-          console.dir(results);
-          res.end(JSON.stringify({ result: true }));
-        }
+  db.query(
+    `UPDATE user_info SET password='${password}' WHERE email='${email}' and token='${token}'`,
+    (err, results, fields) => {
+      if (err) throw err;
+      else {
+        console.dir(results);
+        res.end(JSON.stringify({ result: true }));
       }
-    );
+    }
+  );
 
-    sendMail(email)
-        .then((result) => console.log('sendMail sent...', result))
-        .catch((error) => console.log(error.message));
-  });
+  sendMail(email)
+    .then((result) => console.log("sendMail sent...", result))
+    .catch((error) => console.log(error.message));
 });
 
 module.exports = router;

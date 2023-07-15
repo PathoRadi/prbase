@@ -18,7 +18,7 @@ const oAuth2Client = new google.auth.OAuth2(
 );
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-async function sendMail(email, username, id) {
+async function sendMail(email, username, project) {
   try {
     const accessToken = await oAuth2Client.getAccessToken();
 
@@ -39,7 +39,7 @@ async function sendMail(email, username, id) {
       to: email,
       subject: 'Email from MorStain Team',
       text: `Hello ${username} Your proccess id is pathoradi_${id}.`,
-      html: `<div>Hello ${username}</div><div> Your proccess id is pathoradi_${id}.</div>`,
+      html: `<div>Hello ${username}</div><div> Your proccess id is ${project}.</div>`,
     };
 
     const result = await transport.sendMail(mailOptions);
@@ -117,12 +117,12 @@ router.post("/create", (req, res) => {
   const project = req.body.project;
 
   db.query(
-    "INSERT INTO image_uploaded_info (project, thickness, pixel, images, userid) VALUES (?, ?, ?, ?, ?);",
+    "INSERT INTO imagme_uploaded_info (project, thickness, pixel, images, userid) VALUES (?, ?, ?, ?, ?);",
     [project, thickness, pixel, images, userid],
     (err, results, fields) => {
       if (err) throw err;
       else {
-        sendMail(email, username, results.insertId)
+        sendMail(email, username, results.project)
         .then((result) => console.log('sendMail sent...', result))
         .catch((error) => console.log(error.message));
 

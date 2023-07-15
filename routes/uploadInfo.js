@@ -117,7 +117,7 @@ router.post("/create", (req, res) => {
   const project = req.body.project;
 
   db.query(
-    "INSERT INTO imagme_uploaded_info (project, thickness, pixel, images, userid) VALUES (?, ?, ?, ?, ?);",
+    "INSERT INTO image_uploaded_info (project, thickness, pixel, images, userid) VALUES (?, ?, ?, ?, ?);",
     [project, thickness, pixel, images, userid],
     (err, results, fields) => {
       if (err) throw err;

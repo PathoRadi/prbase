@@ -98,7 +98,7 @@ router.post("/create", (req, res) => {
   const token = generateRandomString(30);
   // timestamp
   const timestamp = new Date();
-  const user = 'user';
+  const user = '';
 
   db.query(
     "INSERT INTO user_info (firstname, lastname, organization, email, password, token, role, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",

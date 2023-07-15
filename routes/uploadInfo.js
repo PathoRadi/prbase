@@ -113,10 +113,11 @@ router.post("/create", (req, res) => {
   const pixel = req.body.pixel;
   const sample = req.body.sample;
   const images = req.body.images;
+  const userid = req.body.userid;
 
   db.query(
-    "INSERT INTO image_info (username, email, thickness, pixel, images) VALUES (?, ?, ?, ?, ?);",
-    [username, email, thickness, pixel, images],
+    "INSERT INTO image_uploaded_info (thickness, pixel, images, userid) VALUES (?, ?, ?, ?);",
+    [thickness, pixel, images, userid],
     (err, results, fields) => {
       if (err) throw err;
       else {
@@ -139,7 +140,7 @@ router.get("/:id", (req, res) => {
     const id = req.params.id;
 
     db.query(
-        " SELECT * FROM  image_info WHERE imageid=?",[id],
+        " SELECT * FROM  image_uploaded_info WHERE imageid=?",[id],
         (err, results, fields) => {
             if (err) throw err;
             else res.end(JSON.stringify(results));

@@ -100,11 +100,11 @@ var config = {
 const db = new mysql.createConnection(config);
 
 /* GET uploadInfo listing. */
-router.get('/', function(req, res, next) {
-  res.send({
-    message: 'upload info'
-  });
-});
+// router.get('/', function(req, res, next) {
+//   res.send({
+//     message: 'upload info'
+//   });
+// });
 
 router.post("/create", (req, res) => {
   const username = req.body.username;
@@ -115,10 +115,12 @@ router.post("/create", (req, res) => {
   const images = req.body.images;
   const userid = req.body.userid;
   const project = req.body.project;
+  const status = "pendding"
+  const timestamp = new Date();
 
   db.query(
-    "INSERT INTO image_uploaded_info (project, thickness, pixel, images, userid) VALUES (?, ?, ?, ?, ?);",
-    [project, thickness, pixel, images, userid],
+    "INSERT INTO image_uploaded_info (project, thickness, pixel, images, status,timestamp,  userid) VALUES (?, ?, ?, ?, ?, ?, ?);",
+    [project, thickness, pixel, images, status, timestamp,userid],
     (err, results, fields) => {
       if (err) throw err;
       else {
@@ -136,12 +138,24 @@ router.post("/create", (req, res) => {
   );
 });
 
+router.get("/", (req, res) => {
+  console.dir(" SELECT * FROM  image_uploaded_info JOIN user_info ON image_uploaded_info.userid = user_info.userid")
+
+  db.query(
+      " SELECT * FROM  image_uploaded_info JOIN user_info ON image_uploaded_info.userid = user_info.userid",
+      (err, results, fields) => {
+          if (err) throw err;
+          else res.end(JSON.stringify(results));
+      }
+  )
+
+});
 
 router.get("/:id", (req, res) => {
-    const id = req.params.id;
+    const userid = req.params.id;
 
     db.query(
-        " SELECT * FROM  image_uploaded_info WHERE imageid=?",[id],
+        " SELECT * FROM  image_uploaded_info WHERE userid=?",[userid],
         (err, results, fields) => {
             if (err) throw err;
             else res.end(JSON.stringify(results));

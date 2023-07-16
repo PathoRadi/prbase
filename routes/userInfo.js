@@ -80,12 +80,7 @@ var config = {
 
 const db = new mysql.createConnection(config);
 
-/* GET uploadInfo listing. */
-router.get('/', function(req, res, next) {
-  res.send({
-    message: 'upload info'
-  });
-});
+
 
 /* Create New User */
 router.post("/create", (req, res) => {
@@ -98,11 +93,11 @@ router.post("/create", (req, res) => {
   const token = generateRandomString(30);
   // timestamp
   const timestamp = new Date();
-  const user = '';
+  const role = email === `pathoradi.howard@gmail.com` ? 'admin' :'user';
 
   db.query(
     "INSERT INTO user_info (firstname, lastname, organization, email, password, token, role, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-    [firstname, lastname, organization, email, password, token, user, timestamp],
+    [firstname, lastname, organization, email, password, token, role, timestamp],
     (err, results, fields) => {
       if (err) throw err;
       else {
@@ -114,6 +109,17 @@ router.post("/create", (req, res) => {
       }
     }
   );
+});
+
+/* GET uploadInfo listing. */
+router.get('/', function(req, res, next) {
+  db.query(
+    " SELECT * FROM  user_info",
+    (err, results, fields) => {
+        if (err) throw err;
+        else res.end(JSON.stringify(results));
+    }
+)
 });
 
 

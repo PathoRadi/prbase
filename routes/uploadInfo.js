@@ -162,7 +162,7 @@ router.get("/:id", (req, res) => {
     const userid = req.params.id;
 
     db.query(
-        " SELECT * FROM  upload_info WHERE userid=?",[userid],
+        " SELECT * FROM  upload_info WHERE uploadid=?",[userid],
         (err, results, fields) => {
             if (err) throw err;
             else res.end(JSON.stringify(results));

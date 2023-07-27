@@ -39,8 +39,8 @@ async function sendMail(email, username, project) {
     const mailOptions = {
       from: 'MorStain <pathoradi.howard@gmail.com>',
       to: email,
-      subject: 'Email from MorStain Team',
-      text: `Hello ${username} Your proccess id is pathoradi_${id}.`,
+      subject: `[MorStain] Your process id is ${project}`,
+      text: `Hello ${username} Your proccess id is ${project}.`,
       html: `<div>Hello ${username}</div><div> Your proccess id is ${project}.</div>`,
     };
 

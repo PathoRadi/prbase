@@ -121,7 +121,7 @@ router.post("/create", (req, res) => {
   const anatomical = req.body.anatomical;
   const structure = req.body.structure;
   const treatment = req.body.treatment;
-  const images = req.body.images.map(image => `${STORAGE_URL}/${project}/${image}`);
+  const images = req.body.images;
   const userid = req.body.userid;
 
   const status = "pendding"

@@ -4,6 +4,8 @@ const { google } = require('googleapis');
 // const API_UL = process.env.LOCAL_URL;
 const API_UL = process.env.PATHORADI_URL;
 
+const STORAGE_URL = "https://pathoradi.blob.core.windows.net/uploaded/"
+
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLEINT_SECRET = process.env.CLEINT_SECRET;
 const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
@@ -119,7 +121,7 @@ router.post("/create", (req, res) => {
   const anatomical = req.body.anatomical;
   const structure = req.body.structure;
   const treatment = req.body.treatment;
-  const images = req.body.images;
+  const images = req.body.images.map(image => `${STORAGE_URL}/${project}/${image}`);
   const userid = req.body.userid;
 
   const status = "pendding"
@@ -159,7 +161,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:id", (req, res) => {
-    const userid = req.params.id;
+    const uploadid = req.params.id;
 
     db.query(
         " SELECT * FROM  upload_info WHERE uploadid=?",[uploadid],

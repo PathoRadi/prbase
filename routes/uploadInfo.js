@@ -109,18 +109,25 @@ const db = new mysql.createConnection(config);
 router.post("/create", (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
-  const thickness = req.body.thickness;
+  const project = req.body.project;
   const pixel = req.body.pixel;
-  const sample = req.body.sample;
+  const slide = req.body.slide;
+  const species = req.body.species;
+  const strain = req.body.strain;
+
+  const organ = req.body.organ;
+  const anatomical = req.body.anatomical;
+  const structure = req.body.structure;
+  const treatment = req.body.treatment;
   const images = req.body.images;
   const userid = req.body.userid;
-  const project = req.body.project;
+
   const status = "pendding"
   const timestamp = new Date();
 
   db.query(
-    "INSERT INTO image_uploaded_info (project, thickness, pixel, images, status,timestamp,  userid) VALUES (?, ?, ?, ?, ?, ?, ?);",
-    [project, thickness, pixel, images, status, timestamp,userid],
+    "INSERT INTO upload_info (project, pixel, slide, species, strain, organ, anatomical, structure, treatment, images, status, timestamp, userid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+    [project, pixel, slide, species, strain, organ, anatomical, structure, treatment, images, status, timestamp, userid],
     (err, results, fields) => {
       if (err) throw err;
       else {
@@ -139,10 +146,10 @@ router.post("/create", (req, res) => {
 });
 
 router.get("/", (req, res) => {
-  console.dir(" SELECT * FROM  image_uploaded_info JOIN user_info ON image_uploaded_info.userid = user_info.userid")
+  console.dir(" SELECT * FROM  upload_info JOIN user_info ON upload_info.userid = user_info.userid")
 
   db.query(
-      " SELECT * FROM  image_uploaded_info JOIN user_info ON image_uploaded_info.userid = user_info.userid",
+      " SELECT * FROM  upload_info JOIN user_info ON upload_info.userid = user_info.userid",
       (err, results, fields) => {
           if (err) throw err;
           else res.end(JSON.stringify(results));
@@ -155,7 +162,7 @@ router.get("/:id", (req, res) => {
     const userid = req.params.id;
 
     db.query(
-        " SELECT * FROM  image_uploaded_info WHERE userid=?",[userid],
+        " SELECT * FROM  upload_info WHERE userid=?",[userid],
         (err, results, fields) => {
             if (err) throw err;
             else res.end(JSON.stringify(results));

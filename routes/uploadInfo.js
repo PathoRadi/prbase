@@ -133,7 +133,7 @@ router.post("/create", (req, res) => {
     (err, results, fields) => {
       if (err) throw err;
       else {
-        sendMail(email, username, results.project)
+        sendMail(email, username, project)
         .then((result) => console.log('sendMail sent...', result))
         .catch((error) => console.log(error.message));
 

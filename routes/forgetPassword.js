@@ -38,25 +38,28 @@ const db = new mysql.createConnection(config);
 async function sendMail(email, token) {
     try {
       const accessToken = await oAuth2Client.getAccessToken();
-  
+
       const transport = nodemailer.createTransport({
-        service: 'gmail',
+        service: "gmail",
         auth: {
-          type: 'OAuth2',
+          type: "OAuth2",
           user: USER_EMAIL,
           clientId: CLIENT_ID,
           clientSecret: CLEINT_SECRET,
           refreshToken: REFRESH_TOKEN,
           accessToken: accessToken,
         },
+        tls: {
+          rejectUnauthorized: false
+        }
       });
   
       const mailOptions = {
-        from: 'MorStain <pathoradi.howard@gmail.com>',
+        from: USER_EMAIL,
         to: email,
-        subject: 'Reset your MorStain Password',
+        subject: 'Reset your Stain.AI Password',
         text: `Hello, Please reset your password clicking on here.`,
-        html: `<div>Hello,</div><div> Please reset your password clicking on <a href="https://imaging.howard.edu/morstainai/user/reset?email=${email}&token=${token}">here</a>.</div>`,
+        html: `<div>Hello,</div><div> Please reset your password clicking on <a href="https://imaging.howard.edu/stainai/user/reset-password?email=${email}&token=${token}">here</a>.</div>`,
       };
   
       const result = await transport.sendMail(mailOptions);

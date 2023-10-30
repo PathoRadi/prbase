@@ -49,14 +49,17 @@ async function sendMail(email) {
         refreshToken: REFRESH_TOKEN,
         accessToken: accessToken,
       },
+      tls: {
+        rejectUnauthorized: false
+      }
     });
 
     const mailOptions = {
-      from: "MorStain <pathoradi.howard@gmail.com>",
+      from: USER_EMAIL,
       to: email,
-      subject: "Rest Your MorStain Password successfully!",
+      subject: "Rest Your Stain.AI Password successfully!",
       // text: `Hello ${username}, Please reset your password clicking on here.`,
-      html: `Rest Your MorStain Password successfully! Please sin in your account <a href="https://imaging.howard.edu/morstainai/user">here</a>.</div>`,
+      html: `Rest Your MorStain Password successfully! Please sin in your account <a href="https://imaging.howard.edu/stainai/user/signin">here</a>.</div>`,
     };
 
     const result = await transport.sendMail(mailOptions);

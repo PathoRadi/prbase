@@ -13,6 +13,7 @@ var uploadInfoRouter = require('./routes/uploadInfo');
 var resetPasswordRouter = require('./routes/resetPassword');
 var singinRouter = require('./routes/singin');
 var forgetPasswordRouter = require('./routes/forgetPassword');
+var contactUsRouter = require('./routes/contactUs');
 
 var app = express();
 const cors=require("cors");
@@ -40,5 +41,6 @@ app.use('/userInfo', userInfoRouter);
 app.use('/singin', singinRouter);
 app.use('/resetPassword', resetPasswordRouter);
 app.use('/forgetPassword', forgetPasswordRouter);
+app.use('/contactUs', contactUsRouter);
 
 module.exports = app;

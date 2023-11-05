@@ -169,11 +169,11 @@ router.post("/create", (req, res) => {
   .catch((error) => console.log(error.message));
 
 
-sendToAdmin(username, project)
+  sendToAdmin(username, project)
   .then((result) => console.log("sendToAdmin sent...", result))
   .catch((error) => console.log(error.message));
 
-  res.end(JSON.stringify(true));
+  res.end(true);
 
 });
 

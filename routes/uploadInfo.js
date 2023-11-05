@@ -163,6 +163,7 @@ router.post("/create", (req, res) => {
       }})
 
   })
+
   sendMail(email, username, project)
   .then((result) => console.log("sendMail sent...", result))
   .catch((error) => console.log(error.message));
@@ -172,7 +173,7 @@ sendToAdmin(username, project)
   .then((result) => console.log("sendToAdmin sent...", result))
   .catch((error) => console.log(error.message));
 
-  res.end(JSON.stringify(results));
+  res.end(JSON.stringify(true));
 
 });
 

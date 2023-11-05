@@ -1,10 +1,10 @@
-const nodemailer = require('nodemailer');
-const { google } = require('googleapis');
+const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
 
-// const API_UL = process.env.LOCAL_URL;
-const API_UL = process.env.PATHORADI_URL;
+const API_UL = process.env.LOCAL_URL;
+// const API_UL = process.env.PATHORADI_URL;
 
-const STORAGE_URL = "https://pathoradi.blob.core.windows.net/uploaded/"
+const STORAGE_URL = "https://pathoradi.blob.core.windows.net/uploaded/";
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLEINT_SECRET = process.env.CLEINT_SECRET;
@@ -25,23 +25,26 @@ async function sendMail(email, username, project) {
     const accessToken = await oAuth2Client.getAccessToken();
 
     const transport = nodemailer.createTransport({
-      service: 'gmail',
+      service: "gmail",
       auth: {
-        type: 'OAuth2',
+        type: "OAuth2",
         user: USER_EMAIL,
         clientId: CLIENT_ID,
         clientSecret: CLEINT_SECRET,
         refreshToken: REFRESH_TOKEN,
         accessToken: accessToken,
       },
+      tls: {
+        rejectUnauthorized: false,
+      },
     });
 
     const mailOptions = {
-      from: 'MorStain <pathoradi.howard@gmail.com>',
+      from: USER_EMAIL,
       to: email,
-      subject: `[MorStain] Your process id is ${project}`,
-      text: `Hello ${username} Your proccess id is ${project}.`,
-      html: `<div>Hello ${username}</div><div> Your proccess id is ${project}.</div>`,
+      subject: `[Stain.AI] Your process id is ${project}`,
+      text: `Hello ${username} Your project is ${project}.`,
+      html: `<div>Hello ${username}</div><div> Your project is ${project}.</div>`,
     };
 
     const result = await transport.sendMail(mailOptions);
@@ -51,40 +54,41 @@ async function sendMail(email, username, project) {
   }
 }
 
-async function sendToAdmin(username, id) {
-    try {
-      const accessToken = await oAuth2Client.getAccessToken();
+async function sendToAdmin(username, project) {
+  try {
+    const accessToken = await oAuth2Client.getAccessToken();
 
-      const transport = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          type: 'OAuth2',
-          user: USER_EMAIL,
-          clientId: CLIENT_ID,
-          clientSecret: CLEINT_SECRET,
-          refreshToken: REFRESH_TOKEN,
-          accessToken: accessToken,
-        },
-      });
-  
-      const mailOptions = {
-        from: `MorSTain <pathoradi.howard@gmail.com>`,
-        to: 'hsiuchuan.shih@howard.edu',
-        subject: `New Upload Info from ${username}`,
-        //text: `New Upload Info from ${username}, download here: http://localhost:3000/uploadInfo/${id}`,
-        html: `<div>New Upload Info from ${username}.</div><br/><div> Download Link:  <a href='${API_UL}/${id}'> here </a></div><br/><div>From MorSTain team </div>`,
-      };
-      
-  
-      const result = await transport.sendMail(mailOptions);
-      return result;
-    } catch (error) {
-      return error;
-    }
+    const transport = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        type: "OAuth2",
+        user: USER_EMAIL,
+        clientId: CLIENT_ID,
+        clientSecret: CLEINT_SECRET,
+        refreshToken: REFRESH_TOKEN,
+        accessToken: accessToken,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+
+    const mailOptions = {
+      from: USER_EMAIL,
+      to: "hsiuchuan.shih@howard.edu",
+      subject: `[Stain.AI] New Upload Info from ${username}`,
+      //text: `New Upload Info from ${username}, download here: http://localhost:3000/uploadInfo/${id}`,
+      html: `<div>New Upload Info from ${username}.</div><br/><div> Download Link:  <a href='${API_UL}/${project}'> here </a></div><br/>`,
+    };
+
+    const result = await transport.sendMail(mailOptions);
+    return result;
+  } catch (error) {
+    return error;
   }
+}
 
-
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
 const mysql = require("mysql");
@@ -109,68 +113,107 @@ const db = new mysql.createConnection(config);
 // });
 
 router.post("/create", (req, res) => {
+  const userid = req.body.userid;
   const username = req.body.username;
   const email = req.body.email;
   const project = req.body.project;
-  const pixel = req.body.pixel;
-  const slide = req.body.slide;
-  const species = req.body.species;
-  const strain = req.body.strain;
 
-  const organ = req.body.organ;
-  const anatomical = req.body.anatomical;
-  const structure = req.body.structure;
-  const treatment = req.body.treatment;
-  const images = req.body.images;
-  const userid = req.body.userid;
+  const uploadInfo = req.body.uploadInfo;
 
-  const status = "pendding"
-  const timestamp = new Date();
+  console.log(uploadInfo)
 
-  db.query(
-    "INSERT INTO upload_info (project, pixel, slide, species, strain, organ, anatomical, structure, treatment, images, status, timestamp, userid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
-    [project, pixel, slide, species, strain, organ, anatomical, structure, treatment, images, status, timestamp, userid],
+  Object.values(uploadInfo).map((info) => {
+
+    const species = info.species;
+    const strain = info.strain;
+    const treatment = info.treatment;
+    const organ = info.organ;
+    const slice = info.slice;
+    const pixel = info.pixel;
+    const region = info.region;
+    const structure = info.structure;
+    const images = info.images.join(',');
+
+    const status = "pendding";
+    const timestamp = new Date();
+    console.log(info)
+
+     db.query(
+    "INSERT INTO upload_info (project, species, strain, treatment, organ, slice, pixel, region,structure, images, status, timestamp, userid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+    [
+      project,
+      species,
+      strain,
+      treatment,
+      organ,
+      slice,
+      pixel,
+      region,
+      structure,
+      images,
+      status,
+      timestamp,
+      userid,
+    ],
     (err, results, fields) => {
       if (err) throw err;
       else {
         sendMail(email, username, project)
-        .then((result) => console.log('sendMail sent...', result))
-        .catch((error) => console.log(error.message));
+          .then((result) => console.log("sendMail sent...", result))
+          .catch((error) => console.log(error.message));
 
-        sendToAdmin(username, results.insertId)
-        .then((result) => console.log('sendToAdmin sent...', result))
-        .catch((error) => console.log(error.message));
-        
-        res.end(JSON.stringify(results))
-      }
+
+          sendToAdmin(username, project)
+          .then((result) => console.log("sendToAdmin sent...", result))
+          .catch((error) => console.log(error.message));
+
+          res.end(JSON.stringify(results));
+
+      }})
+
+  })
+ 
+
+});
+
+router.get("/", (req, res) => {
+  console.dir(
+    " SELECT * FROM  upload_info JOIN user_info ON upload_info.userid = user_info.userid"
+  );
+
+  db.query(
+    " SELECT * FROM  upload_info JOIN user_info ON upload_info.userid = user_info.userid",
+    (err, results, fields) => {
+      if (err) throw err;
+      else res.end(JSON.stringify(results));
     }
   );
 });
 
-router.get("/", (req, res) => {
-  console.dir(" SELECT * FROM  upload_info JOIN user_info ON upload_info.userid = user_info.userid")
+router.get("/:project", (req, res) => {
+  const project = req.params.project;
 
   db.query(
-      " SELECT * FROM  upload_info JOIN user_info ON upload_info.userid = user_info.userid",
-      (err, results, fields) => {
-          if (err) throw err;
-          else res.end(JSON.stringify(results));
-      }
-  )
-
+    " SELECT * FROM  upload_info WHERE project=?",
+    [project],
+    (err, results, fields) => {
+      if (err) throw err;
+      else res.end(JSON.stringify(results));
+    }
+  );
 });
 
-router.get("/:id", (req, res) => {
-    const uploadid = req.params.id;
+router.get("/user/:id", (req, res) => {
+  const id = req.params.id;
 
-    db.query(
-        " SELECT * FROM  upload_info WHERE uploadid=?",[uploadid],
-        (err, results, fields) => {
-            if (err) throw err;
-            else res.end(JSON.stringify(results));
-        }
-    )
-
+  db.query(
+    " SELECT * FROM  upload_info WHERE userid=?",
+    [id],
+    (err, results, fields) => {
+      if (err) throw err;
+      else res.end(JSON.stringify(results));
+    }
+  );
 });
 
 module.exports = router;

@@ -173,7 +173,7 @@ router.post("/create", (req, res) => {
   .then((result) => console.log("sendToAdmin sent...", result))
   .catch((error) => console.log(error.message));
 
-  res.end(true);
+  res.end();
 
 });
 

@@ -1,8 +1,8 @@
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 
-const API_UL = process.env.LOCAL_URL;
-// const API_UL = process.env.PATHORADI_URL;
+// const API_UL = process.env.LOCAL_URL;
+const API_UL = process.env.PATHORADI_URL;
 
 const STORAGE_URL = "https://pathoradi.blob.core.windows.net/uploaded/";
 
@@ -158,21 +158,21 @@ router.post("/create", (req, res) => {
     (err, results, fields) => {
       if (err) throw err;
       else {
-        sendMail(email, username, project)
-          .then((result) => console.log("sendMail sent...", result))
-          .catch((error) => console.log(error.message));
-
-
-          sendToAdmin(username, project)
-          .then((result) => console.log("sendToAdmin sent...", result))
-          .catch((error) => console.log(error.message));
-
-          res.end(JSON.stringify(results));
+    
 
       }})
 
   })
- 
+  sendMail(email, username, project)
+  .then((result) => console.log("sendMail sent...", result))
+  .catch((error) => console.log(error.message));
+
+
+sendToAdmin(username, project)
+  .then((result) => console.log("sendToAdmin sent...", result))
+  .catch((error) => console.log(error.message));
+
+  res.end(JSON.stringify(results));
 
 });
 

@@ -56,7 +56,7 @@ async function sendMail(form) {
 
     const mailOptions = {
       from: USER_EMAIL,
-      to: USER_EMAIL,
+      to: form.email,
       subject: "Stain.Ai contact us message",
       // text: `Hello ${username}, Please reset your password clicking on here.`,
       html: `First name: ${form.firstName}, Last name: ${form.lastName}, Email: ${form.email}, Message: ${form.message}`,

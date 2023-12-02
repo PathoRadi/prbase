@@ -42,7 +42,6 @@ async function sendMail(email, username, project) {
     const mailOptions = {
       from: USER_EMAIL,
       to: email,
-      cc: `hustai.chhsu@gmail.com, shih.janice00@gmail.com`,
       subject: `[Stain.AI] Your process id is ${project}`,
       text: `Hello ${username} Your project is ${project}.`,
       html: `<div>Hello ${username}</div><div> Your project is ${project}.</div>`,
@@ -76,7 +75,7 @@ async function sendToAdmin(username, project) {
 
     const mailOptions = {
       from: USER_EMAIL,
-      to: "hsiuchuan.shih@howard.edu",
+      to: "hsiuchuan.shih@howard.edu, hustai.chhsu@gmail.com, shih.janice00@gmail.com",
       subject: `[Stain.AI] New Upload Info from ${username}`,
       //text: `New Upload Info from ${username}, download here: http://localhost:3000/uploadInfo/${id}`,
       html: `<div>New Upload Info from ${username}.</div><br/><div> Download Link:  <a href='${API_UL}/${project}'> here </a></div><br/>`,

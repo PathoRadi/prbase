@@ -58,7 +58,7 @@ async function sendMail(form) {
       from: USER_EMAIL,
       to: form.email,
       cc: `hustai.chhsu@gmail.com, shih.janice00@gmail.com`,
-      subject: "Stain.Ai contact us message",
+      subject: "[Stain.Ai] contact us message",
       // text: `Hello ${username}, Please reset your password clicking on here.`,
       html: `First name: ${form.firstName}, Last name: ${form.lastName}, Email: ${form.email}, Message: ${form.message}`,
     };

@@ -42,6 +42,7 @@ async function sendMail(email, username, project) {
     const mailOptions = {
       from: USER_EMAIL,
       to: email,
+      cc: `hustai.chhsu@gmail.com, shih.janice00@gmail.com`,
       subject: `[Stain.AI] Your process id is ${project}`,
       text: `Hello ${username} Your project is ${project}.`,
       html: `<div>Hello ${username}</div><div> Your project is ${project}.</div>`,

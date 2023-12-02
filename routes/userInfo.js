@@ -39,6 +39,7 @@ async function sendMail(email, username, token) {
     const mailOptions = {
       from: USER_EMAIL,
       to: email,
+      cc: USER_EMAIL,
       subject: "[Stain.AI] Thank you for Creating Stain.AI Account",
       text: `Hello ${username}, Please reset your password clicking on here.`,
       html: `<div>Hello ${username}</div><div> Please reset your password clicking on <a href="https://imaging.howard.edu/stainai/user/reset-password?email=${email}&token=${token}">here</a>.</div>`,

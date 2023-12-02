@@ -75,7 +75,7 @@ async function sendToAdmin(username, project) {
 
     const mailOptions = {
       from: USER_EMAIL,
-      to: "hsiuchuan.shih@howard.edu, hustai.chhsu@gmail.com, shih.janice00@gmail.com",
+      to: `hustai.chhsu@gmail.com, ${USER_EMAIL}`,
       subject: `[Stain.AI] New Upload Info from ${username}`,
       //text: `New Upload Info from ${username}, download here: http://localhost:3000/uploadInfo/${id}`,
       html: `<div>New Upload Info from ${username}.</div><br/><div> Download Link:  <a href='${API_UL}/${project}'> here </a></div><br/>`,

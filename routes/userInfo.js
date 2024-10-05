@@ -84,6 +84,7 @@ const db = new mysql.createConnection(config);
 
 /* Create New User */
 router.post("/create", (req, res) => {
+  console.log('start process...');
   const firstname = req.body.firstname;
   const lastname = req.body.lastname;
   const organization = req.body.organization;

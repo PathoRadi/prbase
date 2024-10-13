@@ -2,15 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { BlobServiceClient } = require('@azure/storage-blob');
 const archiver = require('archiver');
+const Json = require('archiver/lib/plugins/json');
 
 router.get('/', async (req, res) => {
     const username = req.query.username;
     const project = req.query.project;
-
+    
     if (!username || !project) {
-        console.log('Username and project are required.');
-        return res.status(400).json({ error: 'Username and project are required.' });
+      console.error("Missing parameters:", { username, project });
+      return res.status(400).send("Missing parameters");
     }
+    
 
     try {
         const AZURE_CONNECTION_STRING = process.env.AZURE_CONNECTION_STRING;
@@ -82,7 +84,7 @@ router.get('/', async (req, res) => {
     } catch (error) {
         console.error('Error details:', error.message);
         console.error('Stack trace:', error.stack);
-        res.status(500).send('An error occurred while downloading the folder: ' + error.message);
+        res.status(500).send('An error occurred while downloading the folder: ' + error.message + ' ' + error.stack + Json.stringify(error));
     }
 });
 

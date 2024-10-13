@@ -15,6 +15,9 @@ var singinRouter = require('./routes/singin');
 var forgetPasswordRouter = require('./routes/forgetPassword');
 var contactUsRouter = require('./routes/contactUs');
 
+
+var downloadImages = require('./routes/download-images');
+
 var app = express();
 const cors=require("cors");
 const corsOptions ={
@@ -42,5 +45,9 @@ app.use('/singin', singinRouter);
 app.use('/resetPassword', resetPasswordRouter);
 app.use('/forgetPassword', forgetPasswordRouter);
 app.use('/contactUs', contactUsRouter);
+
+
+
+app.use('/download-images', downloadImages);
 
 module.exports = app;

@@ -32,6 +32,19 @@ router.get('/', async (req, res) => {
             prefix: `${username}/${project}/`,
           };
 
+
+        // const blobs = containerClient.listBlobsFlat(listOptions);
+        // const blobStructure = {
+        //     files: [],
+        // };
+
+        // for await (const blob of blobs) {
+        //     if (/\.[a-z0-9]+$/i.test(blob.name)) {
+        //         blobStructure.files.push(`https://pathoradi.blob.core.windows.net/uploaded/${blob.name}`);
+        //     }
+        // }
+        // res.json({ ...blobStructure });
+
          // Set response headers for the ZIP file
          res.set({
             'Content-Type': 'application/zip',
@@ -47,10 +60,11 @@ router.get('/', async (req, res) => {
 
         // Append blobs to the ZIP archive
         for await (const blob of blobs) {
-            console.log('\t', blob.name);
-            const blobClient = containerClient.getBlobClient(blob.name);
-            const downloadResponse = await blobClient.download(0);
-            archive.append(downloadResponse.readableStreamBody, { name: blob.name.replace(`${username}/${project}/`, '') });
+            if (/\.[a-z0-9]+$/i.test(blob.name)) {
+                const blobClient = containerClient.getBlobClient(blob.name);
+                const downloadResponse = await blobClient.download(0);
+                archive.append(downloadResponse.readableStreamBody, { name: blob.name.replace(`${username}/${project}/`, '') });
+            }
         }
 
         // Finalize the archive
@@ -58,6 +72,7 @@ router.get('/', async (req, res) => {
 
         archive.on('finish', () => {
             console.log(`Successfully created ZIP file for project: ${project} by user: ${username}`);
+            res.json({ message: `Successfully created ZIP file for project: ${project} by user: ${username}`, fiels: blobStructure });
         });
         
 

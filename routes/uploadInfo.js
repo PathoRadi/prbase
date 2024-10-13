@@ -76,9 +76,9 @@ async function sendToAdmin(username, project) {
     const mailOptions = {
       from: USER_EMAIL,
       to: `hustai.chhsu@gmail.com, ${USER_EMAIL}`,
-      subject: `[Stain.AI] New Upload Info from ${username}`,
+      subject: `[Stain.AI] New Upload Images from ${username}`,
       //text: `New Upload Info from ${username}, download here: http://localhost:3000/uploadInfo/${id}`,
-      html: `<div>New Upload Info from ${username}.</div><br/><div> Download Link:  <a href='${API_UL}/${project}'> here </a></div><br/>`,
+      html: `<div>New Upload Images from ${username}.</div><br/><div> Download Link:  <a href='${STORAGE_URL}/${username}/${project}'/> here -'${STORAGE_URL}/${username}/${project}' </a></div><br/>`,
     };
 
     const result = await transport.sendMail(mailOptions);

@@ -8,11 +8,13 @@ router.get('/', async (req, res) => {
     const project = req.query.project;
 
     if (!username || !project) {
+        console.log('Username and project are required.');
         return res.status(400).json({ error: 'Username and project are required.' });
     }
 
     try {
         const AZURE_CONNECTION_STRING = process.env.AZURE_CONNECTION_STRING;
+        console.log('AZURE_CONNECTION_STRING:', AZURE_CONNECTION_STRING);
         const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_CONNECTION_STRING);
 
         const containerClient = blobServiceClient.getContainerClient('uploaded');      
@@ -60,6 +62,7 @@ router.get('/', async (req, res) => {
 
         // Append blobs to the ZIP archive
         for await (const blob of blobs) {
+            console.log('blob.name:', blob.name);   
             if (/\.[a-z0-9]+$/i.test(blob.name)) {
                 const blobClient = containerClient.getBlobClient(blob.name);
                 const downloadResponse = await blobClient.download(0);

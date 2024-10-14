@@ -68,7 +68,7 @@ router.get('/', async (req, res) => {
             if (/\.[a-z0-9]+$/i.test(blob.name)) {
                 const blobClient = containerClient.getBlobClient(blob.name);
                 const downloadResponse = await blobClient.download(0);
-                archive.append(downloadResponse.readableStreamBody, { name: blob.name.replace(`${username}/${project}/`, '') });
+                archive.append(downloadResponse.readableStreamBody, { name: blob.name });
             }
         }
 

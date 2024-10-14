@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
     
 
     try {
-        const AZURE_CONNECTION_STRING = process.env.AZURE_CONNECTION_STRING;
+        const AZURE_CONNECTION_STRING = 'DefaultEndpointsProtocol=https;AccountName=pathoradi;AccountKey=tJ67kaoGapgtPz4hoAZAuKE55LADw7XyIdiHTXkHVfJQN0X2SnWxMdDR9SbpuR6resGU/IG+nbV++ASt5HTSSQ==;EndpointSuffix=core.windows.net';
         console.log('AZURE_CONNECTION_STRING:', AZURE_CONNECTION_STRING);
         const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_CONNECTION_STRING);
 

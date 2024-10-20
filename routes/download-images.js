@@ -36,20 +36,6 @@ router.get('/', async (req, res) => {
             prefix: `${username}/${project}/`,
           };
 
-
-        // const blobs = containerClient.listBlobsFlat(listOptions);
-        // const blobStructure = {
-        //     files: [],
-        // };
-
-        // for await (const blob of blobs) {
-        //     if (/\.[a-z0-9]+$/i.test(blob.name)) {
-        //         blobStructure.files.push(`https://pathoradi.blob.core.windows.net/uploaded/${blob.name}`);
-        //     }
-        // }
-        // res.json({ ...blobStructure });
-
-         // Set response headers for the ZIP file
          res.set({
             'Content-Type': 'application/zip',
             'Content-Disposition': `attachment; filename="${project}.zip"`,

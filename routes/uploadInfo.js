@@ -79,7 +79,7 @@ async function sendToAdmin(username, project) {
       to: `hustai.chhsu@gmail.com, ${USER_EMAIL}`,
       subject: `[Stain.AI] New Upload Images from ${username}`,
       //text: `New Upload Info from ${username}, download here: http://localhost:3000/uploadInfo/${id}`,
-      html: `<div>New Upload Images from ${username}.</div><br/><div> Download Link:  <a href='https://prbase.azurewebsites.net/download-images?username=${username}&project=${project}'/> here - 'https://prbase.azurewebsites.net/download-images?username=${username}&project=${project}' </a></div><br/>`,
+      html: `<div>New Upload Images from ${username}.</div><br/><div>Upload Info: http://localhost:3000/uploadInfo/${id}</div></br><div> Download Link:  <a href='https://prbase.azurewebsites.net/download-images?username=${username}&project=${project}'/> 'https://prbase.azurewebsites.net/download-images?username=${username}&project=${project}' </a></div><br/>`,
     };
 
     const result = await transport.sendMail(mailOptions);

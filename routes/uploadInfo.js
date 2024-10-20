@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 
 // const API_UL = process.env.LOCAL_URL;
-const API_URL= process.env.PATHORADI_URL;
+const API_UL = process.env.PATHORADI_URL;
 
 const STORAGE_URL = "https://pathoradi.blob.core.windows.net/uploaded/";
 
@@ -78,8 +78,8 @@ async function sendToAdmin(username, project) {
       from: USER_EMAIL,
       to: `hustai.chhsu@gmail.com, ${USER_EMAIL}`,
       subject: `[Stain.AI] New Upload Images from ${username}`,
-      //text: `New Upload Info from ${username}, download here: http://localhost:3000/uploadInfo/${project}`,
-      html: `<div>New Upload Images from ${username}.</div><br/><div>Upload Info: ${API_URL}/${project}</div><div> Download Link:  <a href='https://prbase.azurewebsites.net/download-images?username=${username}&project=${project}'/> https://prbase.azurewebsites.net/download-images?username=${username}&project=${project}' </a></div><br/>`,
+      //text: `New Upload Info from ${username}, download here: http://localhost:3000/uploadInfo/${id}`,
+      html: `<div>New Upload Images from ${username}.</div><br/><div> Download Link:  <a href='https://prbase.azurewebsites.net/download-images?username=${username}&project=${project}'/> here - 'https://prbase.azurewebsites.net/download-images?username=${username}&project=${project}' </a></div><br/>`,
     };
 
     const result = await transport.sendMail(mailOptions);

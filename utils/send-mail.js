@@ -10,6 +10,9 @@ const nodemailer = require('nodemailer');
  */
 const sendMail = async (from, to, subject, message) => {
   try {
+    console.log('GMAIL_USER:', process.env.GMAIL_USER);
+    console.log('GMAIL_PASSWORD:', process.env.GMAIL_PASSWORD);
+    
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

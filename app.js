@@ -16,7 +16,7 @@ const corsOptions = {
 app.use(cors(corsOptions));  // Enable CORS
 
 // Setup middlewares
-app.use(logger('dev'));
+app.use(logger('production'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser()); 

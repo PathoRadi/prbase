@@ -121,7 +121,7 @@ router.post("/create", (req, res) => {
 
   const uploadInfo = req.body.uploadInfo;
 
-  console.log(uploadInfo)
+  console.log('req.body:' + req.body);
 
   Object.values(uploadInfo).map((info) => {
 

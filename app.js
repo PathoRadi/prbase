@@ -1,4 +1,8 @@
-require('dotenv').config();
+if (process.env.NODE_ENV === 'production') {
+  require('dotenv').config({ path: '.env.production' });
+} else {
+  require('dotenv').config();  // Load the default `.env` file for development
+}
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');

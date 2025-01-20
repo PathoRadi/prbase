@@ -28,9 +28,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 const contactRouter = require('./routes/stainai/contact');
 const registerRouter = require('./routes/stainai/user/register');
 const resetPasswordRouter = require('./routes/stainai/user/reset-password');
+const requestPasswordResetRouter = require('./routes/stainai/user/request-password-reset');
 
 app.use('/contact', contactRouter);
 app.use('/user/register', registerRouter);
 app.use('/user/reset-password', resetPasswordRouter);
+app.use('/user/request-password-reset', requestPasswordResetRouter);
 
 module.exports = app;

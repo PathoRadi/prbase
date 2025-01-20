@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 
 const sendMail = require('../../../utils/send-mail');
+const dbConfig = require('../../../config/dbConfig');
 
 router.post("/", async (req, res) => {
   const { firstname, lastname, organization, email } = req.body;
@@ -12,17 +13,6 @@ router.post("/", async (req, res) => {
   if (!firstname || !lastname || !organization || !email) {
     return res.status(400).json({ success: false, error: 'Missing required fields' });
   }
-
-  const dbConfig = {
-    host: process.env.MySQL_HOST,
-    user: process.env.MySQL_USER,
-    password: process.env.MySQL_PASSWORD,
-    database: process.env.MySQL_DB,
-    port: process.env.MySQL_PORT,
-    ssl: { ca: fs.readFileSync('DigiCertGlobalRootCA.crt.pem') },
-  };
-
-  console.log('dbConfig:', dbConfig);
 
   // Create a MySQL connection
   const db = mysql.createConnection(dbConfig);

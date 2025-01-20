@@ -10,9 +10,6 @@ const nodemailer = require('nodemailer');
  */
 const sendMail = async (from, to, subject, message) => {
   try {
-    console.log('GMAIL_USER:', process.env.GMAIL_USER);
-    console.log('GMAIL_PASSWORD:', process.env.GMAIL_PASSWORD);
-    
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -30,7 +27,6 @@ const sendMail = async (from, to, subject, message) => {
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log('Message sent: %s', info.messageId);
     return true;
   } catch (error) {
     console.error('Error sending email:', error);

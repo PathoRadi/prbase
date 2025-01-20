@@ -20,14 +20,15 @@ const corsOptions = {
 app.use(cors(corsOptions));  // Enable CORS
 
 // Setup middlewares
-app.use(logger('production'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser()); 
 app.use(express.static(path.join(__dirname, 'public'))); 
 
 const contactRouter = require('./routes/stainai/contact');
+const registerRouter = require('./routes/stainai/user/register');
 
 app.use('/contact', contactRouter);
+app.use('/user/register', registerRouter);
 
 module.exports = app;

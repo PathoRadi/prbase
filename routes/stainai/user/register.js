@@ -65,7 +65,7 @@ router.post("/", async (req, res) => {
     // Send verification email
     const from = process.env.GMAIL_USER || 'imaging.howard@gmail.com';
     const to = email;
-    const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/stainai/user/password-reset?token=${token}`;
+    const verificationUrl = `${process.env.STAINAI_URL}/stainai/user/password-reset?token=${token}`;
     const subject = 'Email Verification for Your STAIN.AI Account';
 
     const message = `

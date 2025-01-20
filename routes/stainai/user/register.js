@@ -22,6 +22,8 @@ router.post("/", async (req, res) => {
     ssl: { ca: fs.readFileSync('DigiCertGlobalRootCA.crt.pem') },
   };
 
+  console.log('dbConfig:', dbConfig);
+
   // Create a MySQL connection
   const db = mysql.createConnection(dbConfig);
 

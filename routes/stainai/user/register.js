@@ -1,6 +1,5 @@
 const express = require('express');
 const mysql = require('mysql');
-const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 
@@ -55,7 +54,7 @@ router.post("/", async (req, res) => {
     // Send verification email
     const from = process.env.GMAIL_USER || 'imaging.howard@gmail.com';
     const to = email;
-    const verificationUrl = `${process.env.STAINAI_URL}/stainai/user/password-reset?token=${token}`;
+    const verificationUrl = `${process.env.STAINAI_URL}/stainai/user/reset-password?token=${token}`;
     const subject = 'Email Verification for Your STAIN.AI Account';
 
     const message = `

@@ -31,6 +31,7 @@ const resetPasswordRouter = require('./routes/stainai/user/reset-password');
 const requestPasswordResetRouter = require('./routes/stainai/user/request-password-reset');
 const signinRouter = require('./routes/stainai/user/singin');
 const uploadImagesRouter = require('./routes/stainai/upload-images');
+const internalDownloadImagesRouter = require('./routes/stainai/internal/download-images');
 
 app.use('/contact', contactRouter);
 app.use('/user/register', registerRouter);
@@ -39,5 +40,6 @@ app.use('/user/request-password-reset', requestPasswordResetRouter);
 app.use('/user/signin', signinRouter);
 app.use('/upload-images', uploadImagesRouter);
 
+app.use('/internal/download-images', internalDownloadImagesRouter);
 
 module.exports = app;

@@ -93,7 +93,7 @@ router.post("/", async (req, res) => {
     message = `
         <p>Hi STAIN.AI Team,</p>
         <p>${username} has submitted new images to STAIN.AI. Please check the admin panel for more details.</p>
-        <p>Download Link:  <a href='https://prbase.azurewebsites.net/api/download-images?username=${username}&project=${project}'/> here - https://prbase.azurewebsites.net/api/download-images?username=${username}&project=${project} </a></p>
+        <p>Download Link:  <a href='https://prbase.azurewebsites.net/internal/download-images?username=${username}&project=${project}'/> here - https://prbase.azurewebsites.net/internal/download-images?username=${username}&project=${project} </a></p>
       `;
 
     sendMail(from, to, subject, message);

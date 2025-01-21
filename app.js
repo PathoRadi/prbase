@@ -30,11 +30,14 @@ const registerRouter = require('./routes/stainai/user/register');
 const resetPasswordRouter = require('./routes/stainai/user/reset-password');
 const requestPasswordResetRouter = require('./routes/stainai/user/request-password-reset');
 const signinRouter = require('./routes/stainai/user/singin');
+const uploadImagesRouter = require('./routes/stainai/upload-images');
 
 app.use('/contact', contactRouter);
 app.use('/user/register', registerRouter);
 app.use('/user/reset-password', resetPasswordRouter);
 app.use('/user/request-password-reset', requestPasswordResetRouter);
 app.use('/user/signin', signinRouter);
+app.use('/upload-images', uploadImagesRouter);
+
 
 module.exports = app;

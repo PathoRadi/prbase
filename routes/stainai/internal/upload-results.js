@@ -18,34 +18,38 @@ router.get('/', async (req, res) => {
   }
 
   try {
-
     // upload results to Azure Blob Storage
     const AZURE_CONNECTION_STRING = process.env.AZURE_CONNECTION_STRING;
+    if (!AZURE_CONNECTION_STRING) {
+      throw new Error('Azure connection string is not defined');
+    }
     const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_CONNECTION_STRING);
-
     const containerClient = blobServiceClient.getContainerClient('uploaded');
-    const containerExists = await containerClient.exists();
 
+    // Check if the container exists
+    const containerExists = await containerClient.exists();
     if (!containerExists) {
       console.log(`Container does not exist: ${containerName}`);
       return res.status(404).send(`Container not found: ${containerName}`);
     }
 
-    // Use __dirname to get the local path and create the zip file name
-    const localDirectory = path.join(__dirname, '..', '..', '..', 'zipped_files');  // Customize the folder location as needed
+    if (typeof folderPath !== 'string' || !fs.existsSync(folderPath)) {
+      return res.status(404).send(`Folder not found at ${folderPath}`);
+    }
+
+    const tempDirectory = path.join('/tmp', 'zipped_files');  // /tmp is a writable area in Azure
+    if (!fs.existsSync(tempDirectory)) {
+      fs.mkdirSync(tempDirectory); // Create directory if it doesn't exist
+    }
+
+    // Prepare the zip file name
     const zipFileName = `results.zip`;
-    const zipFilePath = path.join(localDirectory, zipFileName);
+    const zipFilePath = path.join(tempDirectory, zipFileName);
 
     console.log(`Zipping folder: ${folderPath} to ${zipFilePath}`);
 
-    // Make sure the directory exists
-    if (!fs.existsSync(localDirectory)) {
-      fs.mkdirSync(localDirectory, { recursive: true });
-    }
 
-    /*
-    **  Create a write stream for the ZIP file
-    */
+    // Create a write stream for the ZIP file
     const output = fs.createWriteStream(zipFilePath);
 
     // Create an Archiver instance to zip the folder
@@ -55,8 +59,8 @@ router.get('/', async (req, res) => {
     // Add the folder to the zip archive
     archive.directory(folderPath, false);  // false means do not include the folder name in the zip file
 
-    archive.finalize();
-
+    // Finalize the zip creation
+    await archive.finalize();
 
     /*
     **  Update db with done status

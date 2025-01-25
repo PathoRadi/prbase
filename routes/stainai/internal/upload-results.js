@@ -1,75 +1,73 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
 const { BlobServiceClient } = require('@azure/storage-blob');
+const fs = require('fs');
+const path = require('path');
 const archiver = require('archiver');
 const mysql = require('mysql');
-const path = require('path');
-const fs = require('fs');
 const sendMail = require('../../../utils/send-mail');
-
 const dbConfig = require('../../../config/dbConfig');
 
-router.get('/', async (req, res) => {
-  const { username, project, folderPath } = req.query;
+// Set up multer to handle file uploads
+const upload = multer({ dest: '/tmp/uploads' }); // Temporary directory for uploads
 
-  if (!username || !project || !folderPath) {
-    console.error("Missing parameters:", { username, project, folderPath });
+router.post('/', upload.array('files[]'), async (req, res) => {
+  const { username, project, folderPath } = req.body; // Accept folderPath as part of request body
+
+  // Ensure folderPath is provided
+  if (!folderPath) {
+    return res.status(400).send("Missing folderPath");
+  }
+
+  // Ensure necessary parameters are provided
+  if (!username || !project === 0) {
     return res.status(400).send("Missing parameters");
   }
 
   try {
-    // upload results to Azure Blob Storage
+    // Azure connection setup
     const AZURE_CONNECTION_STRING = process.env.AZURE_CONNECTION_STRING;
     if (!AZURE_CONNECTION_STRING) {
       throw new Error('Azure connection string is not defined');
     }
+
     const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_CONNECTION_STRING);
     const containerClient = blobServiceClient.getContainerClient('uploaded');
 
     // Check if the container exists
     const containerExists = await containerClient.exists();
     if (!containerExists) {
-      console.log(`Container does not exist: ${containerName}`);
-      return res.status(404).send(`Container not found: ${containerName}`);
+      return res.status(404).send('Container not found');
     }
 
-    if (typeof folderPath !== 'string' || !fs.existsSync(folderPath)) {
-      return res.status(404).send(`Folder not found at ${folderPath}`);
+    // Check if the folder exists on your local machine
+    if (!fs.existsSync(folderPath) || !fs.lstatSync(folderPath).isDirectory()) {
+      return res.status(404).send(`The specified folder ${folderPath} does not exist or is not a directory`);
     }
 
-    const tempDirectory = path.join('/tmp', 'zipped_files');  // /tmp is a writable area in Azure
+    // Set up the temp directory for the zip file in the Azure environment
+    const tempDirectory = path.join('/tmp', 'zipped_files');  // Writable temp directory in Azure
     if (!fs.existsSync(tempDirectory)) {
-      fs.mkdirSync(tempDirectory); // Create directory if it doesn't exist
+      fs.mkdirSync(tempDirectory);  // Create the directory if it doesn't exist
     }
 
-    // Prepare the zip file name
     const zipFileName = `results.zip`;
     const zipFilePath = path.join(tempDirectory, zipFileName);
 
-    console.log(`Zipping folder: ${folderPath} to ${zipFilePath}`);
-
-
-    // Create a write stream for the ZIP file
+    // Create a zip file of the folder specified by folderPath
     const output = fs.createWriteStream(zipFilePath);
-
-    // Create an Archiver instance to zip the folder
     const archive = archiver('zip', { zlib: { level: 9 } });
     archive.pipe(output);
 
     // Add the folder to the zip archive
-    archive.directory(folderPath, false);  // false means do not include the folder name in the zip file
-
-    // Finalize the zip creation
+    archive.directory(folderPath, false);  // Add the contents of folderPath to the zip (false means don't include folder name itself)
     await archive.finalize();
 
-    /*
-    **  Update db with done status
-    **  Send email to user
-    */
     output.on('close', function () {
       console.log(`ZIP file created: ${zipFilePath}, total bytes: ${archive.pointer()}`);
 
-      // Read the zip file to upload it to Azure Blob Storage
+      // Read the zip file and upload it to Azure Blob Storage
       const zipStream = fs.createReadStream(zipFilePath);
       const blobClient = containerClient.getBlockBlobClient(`${username}/${project}/${zipFileName}`);
 
@@ -81,7 +79,7 @@ router.get('/', async (req, res) => {
           // Optionally, delete the local zip file after upload
           fs.unlinkSync(zipFilePath);
 
-
+          // Send success response
           // Create a MySQL connection
           const db = mysql.createConnection(dbConfig);
 
@@ -134,12 +132,11 @@ router.get('/', async (req, res) => {
 
     output.on('error', (err) => {
       console.error('Error during ZIP creation:', err);
-      return res.status(500).send('Error zipping the folder');
+      return res.status(500).send('Error zipping the files');
     });
 
-
   } catch (error) {
-    console.error('Error during signup:', error);
+    console.error('Error during upload:', error);
     return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
   }
 });

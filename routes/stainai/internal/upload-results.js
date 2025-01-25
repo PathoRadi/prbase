@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
     }
 
     const zipFileName = `results.zip`;
-    const zipFilePath = path.join(folderPath, zipFileName);
+    const zipFilePath = path.join('/tmp', zipFileName);
 
     console.log(`Zipping folder: ${folderPath} to ${zipFilePath}`);
 

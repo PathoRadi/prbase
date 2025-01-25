@@ -4,7 +4,6 @@ const { BlobServiceClient } = require('@azure/storage-blob');
 const archiver = require('archiver');
 const mysql = require('mysql');
 const { Readable } = require('stream');
-const Json = require('archiver/lib/plugins/json');
 
 const dbConfig = require('../../../config/dbConfig');
 
@@ -90,7 +89,8 @@ router.get('/', async (req, res) => {
 
     archive.on('finish', () => {
       console.log(`Successfully created ZIP file for project: ${project} by user: ${username}`);
-      res.json({ message: `Successfully created ZIP file for project: ${project} by user: ${username}`, fiels: blobStructure });
+      // res.json({ message: `Successfully created ZIP file for project: ${project} by user: ${username}`, fiels: blobStructure });
+      return res.status(200).send(`Successfully created ZIP file for project: ${project} by user: ${username}`);
     });
 
 

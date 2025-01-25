@@ -34,6 +34,7 @@ const uploadImagesRouter = require('./routes/stainai/upload-images');
 const internalDownloadImagesRouter = require('./routes/stainai/internal/download-images');
 const internalUploadResultsRouter = require('./routes/stainai/internal/upload-results');
 const dashboardRouter = require('./routes/stainai/user/dashboard');
+const downloadResultsRouter = require('./routes/stainai/download-results');
 
 app.use('/contact', contactRouter);
 app.use('/user/register', registerRouter);
@@ -45,5 +46,6 @@ app.use('/upload-images', uploadImagesRouter);
 app.use('/internal/download-images', internalDownloadImagesRouter);
 app.use('/internal/upload-results', internalUploadResultsRouter);
 app.use('/user/dashboard', dashboardRouter);
+app.use('/download-results', downloadResultsRouter);
 
 module.exports = app;

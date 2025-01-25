@@ -31,10 +31,17 @@ router.get('/', async (req, res) => {
       return res.status(404).send(`Container not found: ${containerName}`);
     }
 
+    // Use __dirname to get the local path and create the zip file name
+    const localDirectory = path.join(__dirname, '..', '..', '..', 'zipped_files');  // Customize the folder location as needed
     const zipFileName = `results.zip`;
-    const zipFilePath = path.join('/tmp', zipFileName);
+    const zipFilePath = path.join(localDirectory, zipFileName);
 
     console.log(`Zipping folder: ${folderPath} to ${zipFilePath}`);
+
+    // Make sure the directory exists
+    if (!fs.existsSync(localDirectory)) {
+      fs.mkdirSync(localDirectory, { recursive: true });
+    }
 
     /*
     **  Create a write stream for the ZIP file

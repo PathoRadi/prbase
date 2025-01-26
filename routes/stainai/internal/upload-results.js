@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const { BlobServiceClient } = require('@azure/storage-blob');
+const archiver = require('archiver');
 const mysql = require('mysql');
 const sendMail = require('../../../utils/send-mail');
 const dbConfig = require('../../../config/dbConfig');
+const stream = require('stream');
 
 // Set up multer to handle file uploads to memory (no local storage)
 const upload = multer({ storage: multer.memoryStorage() });  // Use memory storage to avoid local disk storage
@@ -33,17 +35,30 @@ router.post('/', upload.array('files[]'), async (req, res) => {
       return res.status(404).send('Container not found');
     }
 
-    // Loop over the uploaded files and upload them to Azure Blob Storage
-    for (const file of req.files) {
-      const blobClient = containerClient.getBlockBlobClient(`${username}/${project}/${file.originalname}`);
-      
-      // Upload the file directly from memory (using Buffer from multer's memoryStorage)
-      await blobClient.uploadData(file.buffer, {
-        blobHTTPHeaders: { blobContentType: file.mimetype }
-      });
+    // Create a PassThrough stream to pipe the zip data
+    const zipStream = new stream.PassThrough();
+    const archive = archiver('zip', { zlib: { level: 9 } });
 
-      console.log(`Uploaded ${file.originalname} to Azure Blob Storage`);
+    // Pipe the archive data to the PassThrough stream
+    archive.pipe(zipStream);
+
+    // Add files to the zip archive from the buffers in memory
+    for (const file of req.files) {
+      archive.append(file.buffer, { name: file.originalname });
     }
+
+    // Finalize the zip archive (this tells archiver to finish creating the zip file)
+    archive.finalize();
+
+    // Create a blob client for the final zip file
+    const blobClient = containerClient.getBlockBlobClient(`${username}/${project}/results.zip`);
+
+    // Upload the zip stream directly to Azure Blob Storage
+    await blobClient.uploadStream(zipStream, undefined, undefined, {
+      blobHTTPHeaders: { blobContentType: 'application/zip' }
+    });
+
+    console.log(`Uploaded results.zip to Azure Blob Storage`);
 
     // Create a MySQL connection and update the database status
     const db = mysql.createConnection(dbConfig);
@@ -79,7 +94,7 @@ router.post('/', upload.array('files[]'), async (req, res) => {
 
         sendMail(from, to, subject, message)
           .then(() => {
-            return res.status(200).send(`Files for project ${project} uploaded successfully.`);
+            return res.status(200).send(`Files for project ${project} have been zipped and uploaded successfully.`);
           })
           .catch(mailError => {
             console.error('Error sending email:', mailError);

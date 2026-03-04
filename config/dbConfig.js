@@ -17,13 +17,13 @@
 const fs = require("fs");
 const path = require("path");
 
-const caPath = path.join(__dirname, "..", "DigiCertGlobalRootCA.crt.pem");
+const caPath = path.join(__dirname, "..", "DigiCertGlobalRootG2.crt.pem");
 
-console.log("[DB SSL] caPath =", caPath);
-console.log("[DB SSL] ca exists =", fs.existsSync(caPath));
-if (fs.existsSync(caPath)) {
-  console.log("[DB SSL] ca bytes =", fs.readFileSync(caPath).length);
-}
+// console.log("[DB SSL] caPath =", caPath);
+// console.log("[DB SSL] ca exists =", fs.existsSync(caPath));
+// if (fs.existsSync(caPath)) {
+//   console.log("[DB SSL] ca bytes =", fs.readFileSync(caPath).length);
+// }
 
 module.exports = {
   host: process.env.MySQL_HOST,
@@ -33,6 +33,6 @@ module.exports = {
   port: Number(process.env.MySQL_PORT || 3306),
   ssl: {
     ca: fs.readFileSync(caPath, "utf8"),
-    rejectUnauthorized: false,
+    rejectUnauthorized: true,
   },
 };

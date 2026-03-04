@@ -33,6 +33,6 @@ module.exports = {
   port: Number(process.env.MySQL_PORT || 3306),
   ssl: {
     ca: fs.readFileSync(caPath, "utf8"),
-    rejectUnauthorized: true,
+    rejectUnauthorized: false,
   },
 };

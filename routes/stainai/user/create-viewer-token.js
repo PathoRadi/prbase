@@ -5,6 +5,9 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   try {
+    // DEBUG
+    console.log("SSO_SHARED_SECRET exists:", !!process.env.SSO_SHARED_SECRET);
+    console.log("req.body:", req.body);
     const { userid, email, firstname, lastname } = req.body;
 
     if (!userid || !email) {

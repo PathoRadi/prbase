@@ -31,6 +31,7 @@ const resetPasswordRouter = require('./routes/stainai/user/reset-password');
 const requestPasswordResetRouter = require('./routes/stainai/user/request-password-reset');
 const signinRouter = require('./routes/stainai/user/singin');
 const createViewerTokenRouter = require('./routes/stainai/user/create-viewer-token');        // newly added
+const logoutBridgeRouter = require('./routes/stainai/user/logout-bridge');                   // newly added
 const uploadImagesRouter = require('./routes/stainai/upload-images');
 const internalDownloadImagesRouter = require('./routes/stainai/internal/download-images');
 const internalUploadResultsRouter = require('./routes/stainai/internal/upload-results');
@@ -43,6 +44,7 @@ app.use('/user/reset-password', resetPasswordRouter);
 app.use('/user/request-password-reset', requestPasswordResetRouter);
 app.use('/user/signin', signinRouter);
 app.use('/user/create-viewer-token', createViewerTokenRouter);  // newly added
+app.use('/user/logout-bridge', logoutBridgeRouter);             // newly added
 app.use('/upload-images', uploadImagesRouter);
 
 app.use('/internal/download-images', internalDownloadImagesRouter);

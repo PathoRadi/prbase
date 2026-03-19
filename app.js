@@ -44,7 +44,7 @@ app.use('/user/reset-password', resetPasswordRouter);
 app.use('/user/request-password-reset', requestPasswordResetRouter);
 app.use('/user/signin', signinRouter);
 app.use('/user/create-viewer-token', createViewerTokenRouter);  // newly added
-app.use('/user/logout-bridge', logoutBridgeRouter);             // newly added
+// app.use('/user/logout-bridge', logoutBridgeRouter);             // newly added
 app.use('/upload-images', uploadImagesRouter);
 
 app.use('/internal/download-images', internalDownloadImagesRouter);

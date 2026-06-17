@@ -58,7 +58,8 @@ router.post("/", async (req, res) => {
           `;
 
       // Send the email
-      sendMail(from, email, subject, message);
+      // sendMail(from, email, subject, message);
+      await sendMail(from, email, subject, message);
 
       // Respond to the client
       return res.status(200).json({ message: 'A password reset link has been sent to your email address. Please check your inbox.' });

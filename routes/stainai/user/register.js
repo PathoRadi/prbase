@@ -65,9 +65,15 @@ router.post("/", async (req, res) => {
       <p>Best regards,<br />The STAIN.AI Team</p>
     `;
 
-    sendMail(from, to, subject, message);
+    // sendMail(from, to, subject, message);
 
-    return res.status(200).json({ message: 'Registration successful. Please check your email for verification.' });
+    // return res.status(200).json({ message: 'Registration successful. Please check your email for verification.' });
+
+    await sendMail(from, to, subject, message);
+
+    return res.status(200).json({
+      message: 'Registration successful. Please check your email for verification.'
+    });
 
   } catch (error) {
     console.error('Error during signup:', error);
